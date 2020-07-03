@@ -25,6 +25,28 @@
             <property name="hibernate.use_sql_comments" value="true"/>
             <!-- JPA 표준에 맞춘 새로운 키 생성 전략을 사용 -->
             <property name="hibernate.id.new_generator_mappings" value="true"/>
+
+
+            <!-- 애플리케이션 실행 시점에 데이터베이스 테이블을 자동으로 생성 설정
+                create : 기존 테이블 삭제 후 새로 생성
+                create-drop : 애플리케이션이 종료 될 때 생성한 테이블을 삭제
+                update : 기존 테이블과 엔티티 매핑정보를 비교하여 변경 사항만 수정
+                validate : 변경 사항이 있을 경우 경고 후 애플리케이션 실행을 멈춤
+                none : 옵션 먹통
+             -->
+            <property name="hibernate.hbm2ddl.auto" value="create"/>
+
+            <!-- 이름 매핑 전략 변경
+                DB의 경우 관례상 언더스코어(_)를 사용, 자바는 카멜케이스를 사용
+                두 이름을 매핑하기 위해선 @Column 어노테이션을 사용해도 되지만
+                아래와 같은 속성을 사용하여 매핑할 수 있다
+
+            5.x 버전으로 업되면서 PhysicalNamingStrategy 구현하여 사용해야한다.
+            PhysicalNamingStrategyStandardImpl 을 상속받아 Table 과 Column 을 커스텀하여 사용
+            -->
+            <property name="hibernate.physical_naming_strategy"
+                      value="util.PhysicalNamingStrategyImpl"/>
+
         </properties>
     </persistence-unit>
 </persistence>

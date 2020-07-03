@@ -51,7 +51,6 @@ public class ExamMergeMain {
 
         // 비영속 엔티티 생성
         Member newMember = new Member();
-        newMember.setId("memberB");
         newMember.setName("병합할회원");
         newMember.setAge(20);
 
