@@ -42,8 +42,8 @@ public class Main {
     public static void logic(EntityManager em) {
         // 멤버 생성
         String id = "id1"; // 멤버 ID 지정
-        Member member = new Member(); // 생성할 model.Member 객체 생성
-        // 생성한 model.Member 객체에 값을 입력
+        Member member = new Member(); // 생성할 model.Member 엔티티 생성
+        // 생성한 model.Member 엔티티에 값을 입력
         member.setId(id);
         member.setName("AnJunyeop");
         member.setAge(25);
@@ -51,7 +51,7 @@ public class Main {
         // 데이터베이스에 저장
         em.persist(member);
 
-        // 수정을 위한 객체의 값 수정
+        // 수정을 위한 엔티티의 값 수정
         member.setAge(24);
 
         // id1 이란 ID 값으로 조회
