@@ -23,21 +23,35 @@ public class Member {
     private Integer age;
 
     /* 다양한 매핑 어노테이션 사용 */
-    // Enumerated 을 사용한 매핑 어노테이션
+    /*Enumerated 을 사용한 매핑 어노테이션
+    * ORDINAL 로 설정할 경우 값이 Enum 에서 정의된 순서로 데이터베이스에 저장됨
+    * ADMIN, USER 사이에 GUEST 같이 새로운 값이 들어올 경우 순서 값이 바뀌기 때문에
+    * 데이터에 문제가 발생할 수 있다
+    * */
     @Enumerated(EnumType.STRING)
     private RoleType roleType;
 
-    // Temporal 을 사용한 날짜 매핑
+    /*Temporal 을 사용한 날짜 매핑
+    * DATE => 날짜
+    * TIME => 시간
+    * TIMESTAMP => 날짜와 시간
+    * */
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastModifiedDate;
 
-    // Lob 을 사용한 CLOB, BLOB 같은 긴 데이터를 매핑
+    /*CLOB(String, char[], java.sql.CLOB)
+    * BLOB(byte[], java.sql.BLOB)
+    * 데이터를 매핑
+    * */
     @Lob
     private String description;
 
+    // 매핑하지 않음
+    @Transient
+    private Integer temp;
 
     public String getId() {
         return id;
@@ -55,8 +69,14 @@ public class Member {
         this.name = name;
     }
 
+    /* 접근자를 이용하여 데이터에 접근한다.
+    * @Id 가 필드에 있으므로 기본은 필드 접근 방식(필드의 값으로 저장)
+    * 별개로 접근자에 Access 지정 시 해당 컬럼만 프로퍼티 접근 방식
+    * 때문에 AGE + 5 값이 저장된다.
+    * */
+    @Access(AccessType.PROPERTY)
     public Integer getAge() {
-        return age;
+        return age + 5;
     }
 
     public void setAge(Integer age) {
@@ -93,6 +113,14 @@ public class Member {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Integer getTemp() {
+        return temp;
+    }
+
+    public void setTemp(Integer temp) {
+        this.temp = temp;
     }
 
     @Override
