@@ -41,7 +41,7 @@ public class DiDirectionMain {
 
         // 양방향 연관관계 설정
         member1.setTeam(team1); // member1 -> team1을
-        team1.getMembers().add(member1); // team1 -> member1
+//        team1.getMembers().add(member1); // team1 -> member1
                                          // 순수한 객체를 고려하여 team1의 members에 member1을 추가
         em.persist(member1);
 
@@ -51,14 +51,18 @@ public class DiDirectionMain {
 
         // 양방향 연관관계 설정(위와 동일)
         member2.setTeam(team1);
-        team1.getMembers().add(member2);
+//        team1.getMembers().add(member2);
         em.persist(member2);
 
         Team findTeam = em.find(Team.class, team1.getId());
 
         System.out.println(findTeam);
         for(Member member : findTeam.getMembers()) {
-            System.out.println(member.toString() + ", " + member.getTeam().toString());
+            System.out.println("findTeam: " + member.toString() + ", " + member.getTeam().toString());
+        }
+
+        for (Member member : team1.getMembers()) {
+            System.out.println("team1: " + member.toString() + ", " + member.getTeam().toString());
         }
 
     }
