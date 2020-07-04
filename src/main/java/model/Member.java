@@ -47,8 +47,6 @@ public class Member {
     public String toString() {
         return "Member{" +
                 "id=" + id +
-                ", username='" + username + '\'' +
-                ", team=" + team +
-                '}';
+                ", username='" + username + '}';
     }
 }

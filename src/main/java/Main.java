@@ -12,21 +12,34 @@ public class Main {
     public static void main(String[] args) {
         EntityManagerFactory emf = Persistence
                 .createEntityManagerFactory("learn-jpa");
-
-
         EntityManager em = emf.createEntityManager();
-
         EntityTransaction tx = em.getTransaction();
 
-        tx.begin();
+        try {
+            tx.begin();
 
-        init(em);
-        queryLogicJoin(em);
-        updateRelation(em);
+//            init(em);
+            biDirection(em);
+//            queryLogicJoin(em);
+//            updateRelation(em);
 
-        tx.commit();
-        em.close();
+            tx.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            tx.rollback();
+        } finally {
+            em.close();
+        }
         emf.close();
+    }
+
+    private static void biDirection(EntityManager em) {
+        Team team = em.find(Team.class, Long.valueOf(1));
+        List<Member> members = team.getMembers();
+
+        for (Member member : members) {
+            System.out.println("###" + member.toString());
+        }
     }
 
     private static void queryLogicJoin(EntityManager em) {

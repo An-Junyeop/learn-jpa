@@ -1,9 +1,11 @@
 package model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Team {
@@ -14,6 +16,9 @@ public class Team {
     private Long id;
 
     private String name;
+
+    @OneToMany(mappedBy = "team", fetch = FetchType.EAGER)
+    private List<Member> members = new ArrayList<Member>();
 
     public Long getId() {
         return id;
@@ -31,11 +36,19 @@ public class Team {
         this.name = name;
     }
 
+    public List<Member> getMembers() {
+        return members;
+    }
+
+    public void setMembers(List<Member> members) {
+        this.members = members;
+    }
+
     @Override
     public String toString() {
         return "Team{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
+                ", name='" + name +
                 '}';
     }
 }
