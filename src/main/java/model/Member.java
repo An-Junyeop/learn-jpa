@@ -1,7 +1,6 @@
 package model;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -14,11 +13,8 @@ public class Member {
 
     private String name;
 
-    @ManyToMany // 다대다 관계설정
-    @JoinTable(name = "MEMBER_PRODUCT", // 테이블명
-    joinColumns = @JoinColumn(name = "MEMBER_ID"), // 조인할 컬럼
-    inverseJoinColumns = @JoinColumn(name = "PRODUCT_ID")) // 반대편 조인할 컬럼
-    private List<Product> products = new ArrayList<Product>();
+    @OneToMany(mappedBy = "member")
+    private List<MemberProduct> memberProducts;
 
     public int getId() {
         return id;
@@ -36,16 +32,11 @@ public class Member {
         this.name = name;
     }
 
-    public List<Product> getProducts() {
-        return products;
+    public List<MemberProduct> getMemberProducts() {
+        return memberProducts;
     }
 
-    public void setProducts(List<Product> products) {
-        this.products = products;
-    }
-
-    public void addProduct(Product product) {
-        products.add(product);
-        product.getMembers().add(this);
+    public void setMemberProducts(List<MemberProduct> memberProducts) {
+        this.memberProducts = memberProducts;
     }
 }

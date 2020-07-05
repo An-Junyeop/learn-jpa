@@ -1,4 +1,6 @@
 import model.Member;
+import model.MemberProduct;
+import model.MemberProductId;
 import model.Product;
 
 import javax.persistence.EntityManager;
@@ -16,75 +18,10 @@ public class Main {
         try {
             tx.begin();
 
-/*
-            // 상품 등록
-            Product productA = new Product();
-            productA.setName("ProductA");
-            em.persist(productA);
-
-            // 회원 등록 및 회원과 상품 등록
-            Member member1 = new Member();
-            member1.setName("Member1");
-            member1.getProducts().add(productA);
-            em.persist(member1);
-
-*/
-/*
-
-            // 회원을 통한 조회
-            Member findMember = em.find(Member.class, 1);
-            List<Product> products = findMember.getProducts();
-
-            for(Product product : products) {
-                System.out.println("product.name = " + product.getName());
-            }
-*/
-
-/*
-
-            // 상품을 통한 회원 조회
-            Product findProduct = em.find(Product.class, 1);
-            List<Member> members = findProduct.getMembers();
-
-            // 새로운 회원 생성
-            Member member2 = new Member();
-            member2.setName("Member2");
-            em.persist(member2);
-
-            // 회원의 상품 목록에 조회한 상품 등록
-            member2.addProduct(findProduct);
-
-            for(Member member : members) {
-                System.out.println("Member.name = " + member.getName());
-            }
-*/
-
-/*
-
-            Member findMember = em.find(Member.class, 2);
-
-            // 새로운 상품 2, 3, 4
-            for(int i = 2; i < 5; i ++) {
-                Product product = new Product();
-                product.setName("Product" + i);
-                em.persist(product);
-
-                // 새로운 상품을 회원에 등록
-                findMember.addProduct(product);
-            }
-*/
-
-            // 상품 조회
-            Product findProduct = em.find(Product.class, 1);
-
-            // 회원 생성
-            Member member = new Member();
-            member.setName("Member3");
-            em.persist(member);
-
-            // 상품에 회원 추가 (편의성 메소드 처리가 안되어 있어 안됌)
-            findProduct.getMembers().add(member);
-
+            //save(em, member1, product, 3);
+            find(em, 1, 1);
+            find(em, 1, 2);
+            find(em, 1, 4);
 
             tx.commit();
         } catch (Exception e) {
@@ -93,7 +30,29 @@ public class Main {
         } finally {
             em.close();
         }
-            emf.close();
-
+        emf.close();
     }
+
+    private static void find(EntityManager em, int memberId, int productId) {
+        MemberProductId memberProductId = new MemberProductId();
+        memberProductId.setMember(memberId);
+        memberProductId.setProduct(productId);
+
+        MemberProduct memberProduct = em.find(MemberProduct.class, memberProductId);
+
+        System.out.println("member.name = " + memberProduct.getMember().getName());
+        System.out.println("product.name = " + memberProduct.getProduct().getName());
+        System.out.println("OrderAmount = " + memberProduct.getOrderAmount());
+    }
+
+    private static void save(EntityManager em, Member member, Product product, int orderAmount) {
+        MemberProduct memberProduct = new MemberProduct();
+        memberProduct.setMember(member);
+        memberProduct.setProduct(product);
+        memberProduct.setOrderAmount(orderAmount);
+
+        em.persist(memberProduct);
+    }
+
+
 }
