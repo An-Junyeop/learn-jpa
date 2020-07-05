@@ -29,12 +29,32 @@ public class Main {
             em.persist(member1);
 
 */
-            // 조회
+/*
+
+            // 회원을 통한 조회
             Member findMember = em.find(Member.class, 1);
             List<Product> products = findMember.getProducts();
 
             for(Product product : products) {
                 System.out.println("product.name = " + product.getName());
+            }
+*/
+
+
+            // 상품을 통한 회원 조회
+            Product findProduct = em.find(Product.class, 1);
+            List<Member> members = findProduct.getMembers();
+
+            // 새로운 회원 생성
+            Member member2 = new Member();
+            member2.setName("Member2");
+            em.persist(member2);
+
+            // 회원의 상품 목록에 조회한 상품 등록
+            member2.addProduct(findProduct);
+
+            for(Member member : members) {
+                System.out.println("Member.name = " + member.getName());
             }
 
             tx.commit();
