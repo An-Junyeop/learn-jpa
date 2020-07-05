@@ -48,11 +48,7 @@ public class OrderItem {
     }
 
     public void setItem(Item item) {
-        if(this.item != null) {
-            this.item.getOrderItems().remove(this);
-        }
         this.item = item;
-        item.getOrderItems().add(this);
     }
 
     public int getOrderPrice() {

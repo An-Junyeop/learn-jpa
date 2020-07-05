@@ -72,4 +72,12 @@ public class Member {
     public void setOrders(List<Order> orders) {
         this.orders = orders;
     }
+
+    public void addOrder(Order order) {
+        this.orders.add(order);
+
+        if(order.getMember() != this) {
+            order.setMember(this);
+        }
+    }
 }
