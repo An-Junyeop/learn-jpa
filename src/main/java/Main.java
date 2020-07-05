@@ -40,6 +40,7 @@ public class Main {
             }
 */
 
+/*
 
             // 상품을 통한 회원 조회
             Product findProduct = em.find(Product.class, 1);
@@ -56,6 +57,34 @@ public class Main {
             for(Member member : members) {
                 System.out.println("Member.name = " + member.getName());
             }
+*/
+
+/*
+
+            Member findMember = em.find(Member.class, 2);
+
+            // 새로운 상품 2, 3, 4
+            for(int i = 2; i < 5; i ++) {
+                Product product = new Product();
+                product.setName("Product" + i);
+                em.persist(product);
+
+                // 새로운 상품을 회원에 등록
+                findMember.addProduct(product);
+            }
+*/
+
+            // 상품 조회
+            Product findProduct = em.find(Product.class, 1);
+
+            // 회원 생성
+            Member member = new Member();
+            member.setName("Member3");
+            em.persist(member);
+
+            // 상품에 회원 추가 (편의성 메소드 처리가 안되어 있어 안됌)
+            findProduct.getMembers().add(member);
+
 
             tx.commit();
         } catch (Exception e) {
