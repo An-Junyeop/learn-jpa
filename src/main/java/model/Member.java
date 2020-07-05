@@ -1,7 +1,5 @@
 package model;
 
-import org.hibernate.annotations.GeneratorType;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,26 +8,23 @@ import java.util.List;
 public class Member {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "MEMBER_ID")
-    private Long id;
+    private int id;
 
     private String name;
 
-    private String city;
+    @ManyToMany // 다대다 관계설정
+    @JoinTable(name = "MEMBER_PRODUCT", // 테이블명
+    joinColumns = @JoinColumn(name = "MEMBER_ID"), // 조인할 컬럼
+    inverseJoinColumns = @JoinColumn(name = "PRODUCT_ID")) // 반대편 조인할 컬럼
+    private List<Product> products = new ArrayList<Product>();
 
-    private String street;
-
-    private String zipcode;
-
-    @OneToMany(mappedBy = "member")
-    private List<Order> orders = new ArrayList<Order>();
-
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -41,43 +36,11 @@ public class Member {
         this.name = name;
     }
 
-    public String getCity() {
-        return city;
+    public List<Product> getProducts() {
+        return products;
     }
 
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getStreet() {
-        return street;
-    }
-
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
-    public String getZipcode() {
-        return zipcode;
-    }
-
-    public void setZipcode(String zipcode) {
-        this.zipcode = zipcode;
-    }
-
-    public List<Order> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
-    }
-
-    public void addOrder(Order order) {
-        this.orders.add(order);
-
-        if(order.getMember() != this) {
-            order.setMember(this);
-        }
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
 }

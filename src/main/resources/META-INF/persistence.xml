@@ -34,7 +34,7 @@
                 validate : 변경 사항이 있을 경우 경고 후 애플리케이션 실행을 멈춤
                 none : 옵션 먹통
              -->
-            <property name="hibernate.hbm2ddl.auto" value="create"/>
+            <property name="hibernate.hbm2ddl.auto" value="validate"/>
 
             <!-- 이름 매핑 전략 변경
                 DB의 경우 관례상 언더스코어(_)를 사용, 자바는 카멜케이스를 사용
