@@ -1,20 +1,17 @@
 package model;
 
-import org.hibernate.annotations.GeneratorType;
-
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
-public class Member {
+public class Delivery {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "MEMBER_ID")
+    @Column(name = "DELIVERY_ID")
     private Long id;
 
-    private String name;
+    @OneToOne(mappedBy = "delivery")
+    private Order order;
 
     private String city;
 
@@ -22,8 +19,8 @@ public class Member {
 
     private String zipcode;
 
-    @OneToMany(mappedBy = "member")
-    private List<Order> orders = new ArrayList<Order>();
+    @Enumerated(EnumType.STRING)
+    private DeliveryStatus status;
 
     public Long getId() {
         return id;
@@ -31,14 +28,6 @@ public class Member {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getCity() {
@@ -65,19 +54,23 @@ public class Member {
         this.zipcode = zipcode;
     }
 
-    public List<Order> getOrders() {
-        return orders;
+    public DeliveryStatus getStatus() {
+        return status;
     }
 
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
+    public void setStatus(DeliveryStatus status) {
+        this.status = status;
     }
 
-    public void addOrder(Order order) {
-        this.orders.add(order);
-
-        if(order.getMember() != this) {
-            order.setMember(this);
-        }
+    public Order getOrder() {
+        return order;
     }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+}
+
+enum DeliveryStatus {
+    READY, COMP
 }

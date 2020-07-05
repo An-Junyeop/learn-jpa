@@ -10,7 +10,7 @@ import java.util.List;
 public class Order {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ORDER_ID")
     private Long id;
 
@@ -18,14 +18,18 @@ public class Order {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
+    @OneToMany(mappedBy = "order")
+    private List<OrderItem> orderItems = new ArrayList<OrderItem>();
+
+    @OneToOne
+    @JoinColumn(name = "DELIVERY_ID")
+    private Delivery delivery;
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date orderDate;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
-
-    @OneToMany(mappedBy = "order")
-    private List<OrderItem> orderItems = new ArrayList<OrderItem>();
 
     public Long getId() {
         return id;
@@ -81,4 +85,17 @@ public class Order {
             orderItem.setOrder(this);
         }
     }
+
+    public Delivery getDelivery() {
+        return delivery;
+    }
+
+    public void setDelivery(Delivery delivery) {
+        this.delivery = delivery;
+        delivery.setOrder(this);
+    }
+}
+
+enum OrderStatus {
+    ORDER, CANCEL
 }
