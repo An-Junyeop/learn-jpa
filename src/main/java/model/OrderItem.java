@@ -1,11 +1,9 @@
 package model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
+@Table(name = "ORDER_ITEM")
 public class OrderItem {
 
     @Id
@@ -13,9 +11,13 @@ public class OrderItem {
     @Column(name = "ORDER_ITEM_ID")
     private Long id;
 
-    private Long itemId;
+    @ManyToOne
+    @JoinColumn(name = "ORDER_ID")
+    private Order order;
 
-    private Long orderId;
+    @ManyToOne
+    @JoinColumn(name = "ITEM_ID")
+    private Item item;
 
     private int orderPrice;
 
@@ -29,20 +31,28 @@ public class OrderItem {
         this.id = id;
     }
 
-    public Long getItemId() {
-        return itemId;
+    public Order getOrder() {
+        return order;
     }
 
-    public void setItemId(Long itemId) {
-        this.itemId = itemId;
+    public void setOrder(Order order) {
+        if(this.order != null) {
+            this.order.getOrderItems().remove(this);
+        }
+        this.order = order;
+        order.getOrderItems().add(this);
     }
 
-    public Long getOrderId() {
-        return orderId;
+    public Item getItem() {
+        return item;
     }
 
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
+    public void setItem(Item item) {
+        if(this.item != null) {
+            this.item.getOrderItems().remove(this);
+        }
+        this.item = item;
+        item.getOrderItems().add(this);
     }
 
     public int getOrderPrice() {

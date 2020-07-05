@@ -1,7 +1,9 @@
 package model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "ORDERS")
@@ -12,13 +14,18 @@ public class Order {
     @Column(name = "ORDER_ID")
     private Long id;
 
-    private Long memberId;
+    @ManyToOne
+    @JoinColumn(name = "MEMBER_ID")
+    private Member member;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date orderDate;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
+
+    @OneToMany(mappedBy = "order")
+    private List<OrderItem> orderItems = new ArrayList<OrderItem>();
 
     public Long getId() {
         return id;
@@ -28,12 +35,16 @@ public class Order {
         this.id = id;
     }
 
-    public Long getMemberId() {
-        return memberId;
+    public Member getMember() {
+        return member;
     }
 
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
+    public void setMember(Member member) {
+        if(this.member != null) {
+            this.member.getOrders().remove(this);
+        }
+        this.member = member;
+        member.getOrders().add(this);
     }
 
     public Date getOrderDate() {
@@ -50,5 +61,13 @@ public class Order {
 
     public void setStatus(OrderStatus status) {
         this.status = status;
+    }
+
+    public List<OrderItem> getOrderItems() {
+        return orderItems;
+    }
+
+    public void setOrderItems(List<OrderItem> orderItems) {
+        this.orderItems = orderItems;
     }
 }
