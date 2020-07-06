@@ -1,4 +1,4 @@
-package model.joined;
+package model;
 
 import javax.persistence.*;
 
