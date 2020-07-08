@@ -3,26 +3,19 @@ package model;
 import javax.persistence.*;
 
 @Entity
+@IdClass(ChildId.class)
 public class Child {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
     @ManyToOne
-    @JoinColumns({
-            @JoinColumn(name = "PARENT_ID1"),
-            @JoinColumn(name = "PARENT_ID2")
-    })
-    private Parent parent;
+    @JoinColumn(name = "PARENT_ID")
+    public Parent parent;
 
-    public int getId() {
-        return id;
-    }
+    @Id
+    @Column(name = "CHILD_ID")
+    private int childId;
 
-    public void setId(int id) {
-        this.id = id;
-    }
+    private String name;
 
     public Parent getParent() {
         return parent;
@@ -30,5 +23,21 @@ public class Child {
 
     public void setParent(Parent parent) {
         this.parent = parent;
+    }
+
+    public int getChildId() {
+        return childId;
+    }
+
+    public void setChildId(int childId) {
+        this.childId = childId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
