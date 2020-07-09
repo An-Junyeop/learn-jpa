@@ -3,19 +3,31 @@ package model;
 import javax.persistence.*;
 
 @Entity
-@IdClass(ChildId.class)
+//@IdClass(ChildId.class)
 public class Child {
 
-    @Id
+    @EmbeddedId
+    private ChildId id;
+
+    //@Id
+    @MapsId("parentId")
     @ManyToOne
     @JoinColumn(name = "PARENT_ID")
     public Parent parent;
 
-    @Id
+    /*@Id
     @Column(name = "CHILD_ID")
-    private int childId;
+    private int childId;*/
 
     private String name;
+
+    public ChildId getId() {
+        return id;
+    }
+
+    public void setId(ChildId id) {
+        this.id = id;
+    }
 
     public Parent getParent() {
         return parent;
@@ -23,14 +35,6 @@ public class Child {
 
     public void setParent(Parent parent) {
         this.parent = parent;
-    }
-
-    public int getChildId() {
-        return childId;
-    }
-
-    public void setChildId(int childId) {
-        this.childId = childId;
     }
 
     public String getName() {

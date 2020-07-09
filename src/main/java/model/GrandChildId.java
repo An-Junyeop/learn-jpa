@@ -1,11 +1,18 @@
 package model;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import java.io.Serializable;
 
+@Embeddable
 public class GrandChildId implements Serializable {
 
-    private ChildId child; // GrandChild.child 매핑
+    //private ChildId child; // GrandChild.child 매핑
 
+    // GrnadChild의 MapsId와 매핑
+    private ChildId childId;
+
+    @Column(name = "GRNADCHILD_ID")
     private int id; // GrandChild.id 매핑
 
     @Override
@@ -19,19 +26,11 @@ public class GrandChildId implements Serializable {
     }
 
     public ChildId getChildId() {
-        return child;
+        return childId;
     }
 
-    public void setChildId(ChildId child) {
-        this.child = child;
-    }
-
-    public ChildId getChild() {
-        return child;
-    }
-
-    public void setChild(ChildId child) {
-        this.child = child;
+    public void setChildId(ChildId childId) {
+        this.childId = childId;
     }
 
     public int getId() {

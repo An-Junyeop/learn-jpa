@@ -4,10 +4,14 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "GRAND_CHILD")
-@IdClass(GrandChildId.class)
+//@IdClass(GrandChildId.class)
 public class GrandChild {
 
-    @Id
+    @EmbeddedId
+    private GrandChildId id;
+
+    //@Id
+    @MapsId("childId")
     @ManyToOne
     @JoinColumns({
             @JoinColumn(name = "PARENT_ID"),
@@ -15,11 +19,19 @@ public class GrandChild {
     })
     private Child child;
 
-    @Id
+    /*@Id
     @Column(name = "GRANDCHILD_ID")
-    private int id;
+    private int id;*/
 
     private String name;
+
+    public GrandChildId getId() {
+        return id;
+    }
+
+    public void setId(GrandChildId id) {
+        this.id = id;
+    }
 
     public Child getChild() {
         return child;
@@ -27,14 +39,6 @@ public class GrandChild {
 
     public void setChild(Child child) {
         this.child = child;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {

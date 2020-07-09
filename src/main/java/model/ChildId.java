@@ -1,20 +1,31 @@
 package model;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import java.io.Serializable;
 
+@Embeddable
 public class ChildId implements Serializable {
 
     // Child.parent 매핑
-    private int parent;
+    //private int parent;
+
+    // Child의 MapsId 매핑
+    private int parentId;
 
     // Child.childId 매핑
-    private int childId;
+    //private int childId;
 
-    public ChildId() {}
+    @Column(name = "CHILD_ID")
+    private int id;
 
-    public ChildId(int parent, int childId) {
-        this.parent = parent;
-        this.childId = childId;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChildId childId = (ChildId) o;
+        return parentId == childId.parentId &&
+                id == childId.id;
     }
 
     @Override
@@ -22,24 +33,19 @@ public class ChildId implements Serializable {
         return super.hashCode();
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
+    public int getParentId() {
+        return parentId;
     }
 
-    public int getParent() {
-        return parent;
+    public void setParentId(int parentId) {
+        this.parentId = parentId;
     }
 
-    public void setParent(int parent) {
-        this.parent = parent;
+    public int getId() {
+        return id;
     }
 
-    public int getChildId() {
-        return childId;
-    }
-
-    public void setChildId(int childId) {
-        this.childId = childId;
+    public void setId(int id) {
+        this.id = id;
     }
 }
