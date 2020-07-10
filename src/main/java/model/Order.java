@@ -96,6 +96,3 @@ public class Order extends BaseEntity {
     }
 }
 
-enum OrderStatus {
-    ORDER, CANCEL
-}
