@@ -12,6 +12,12 @@ public class Child {
 
     private String name;
 
+    @ManyToOne(optional = false)
+    @JoinTable(name = "PARENT_CHILD",
+            joinColumns = @JoinColumn(name = "CHILD_ID"),
+            inverseJoinColumns = @JoinColumn(name = "PARENT_ID"))
+    private Parent parent;
+
     public Long getId() {
         return id;
     }
@@ -26,5 +32,13 @@ public class Child {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Parent getParent() {
+        return parent;
+    }
+
+    public void setParent(Parent parent) {
+        this.parent = parent;
     }
 }
