@@ -16,15 +16,7 @@ public class Main {
         try {
             tx.begin();
 
-            // LOGIC
-            Board board = new Board();
-            board.setTitle("책 제목");
-            em.persist(board);
 
-            BoardDetail boardDetail = new BoardDetail();
-            boardDetail.setBoard(board);
-            boardDetail.setContent("Contents");
-            em.persist(boardDetail);
 
             tx.commit();
         } catch (Exception e) {
