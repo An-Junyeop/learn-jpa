@@ -1,6 +1,8 @@
 package model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Parent {
@@ -12,12 +14,12 @@ public class Parent {
 
     private String name;
 
-    @OneToOne
+    @OneToMany
     @JoinTable(name = "PARENT_CHILD",
             joinColumns = @JoinColumn(name = "PARENT_ID"),
             inverseJoinColumns = @JoinColumn(name = "CHILD_ID")
     )
-    private Child child;
+    private List<Child> child = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -35,11 +37,11 @@ public class Parent {
         this.name = name;
     }
 
-    public Child getChild() {
+    public List<Child> getChild() {
         return child;
     }
 
-    public void setChild(Child child) {
+    public void setChild(List<Child> child) {
         this.child = child;
     }
 }
