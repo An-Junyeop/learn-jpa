@@ -14,7 +14,7 @@ public class Parent {
 
     private String name;
 
-    @ManyToMany(mappedBy = "parent")
+    @OneToMany(mappedBy = "parent")
     private List<Child> child = new ArrayList<>();
 
     public Long getId() {
