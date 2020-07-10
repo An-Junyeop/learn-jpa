@@ -71,6 +71,3 @@ public class Delivery extends BaseEntity {
     }
 }
 
-enum DeliveryStatus {
-    READY, COMP
-}
