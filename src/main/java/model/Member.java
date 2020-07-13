@@ -11,8 +11,8 @@ public class Member {
 
     private String name;
 
-    @Embedded Period workPeriod;
     @Embedded Address homeAddress;
+    @Embedded PhoneNumber phoneNumber;
 
     public Long getId() {
         return id;
@@ -30,19 +30,19 @@ public class Member {
         this.name = name;
     }
 
-    public Period getWorkPeriod() {
-        return workPeriod;
-    }
-
-    public void setWorkPeriod(Period workPeriod) {
-        this.workPeriod = workPeriod;
-    }
-
     public Address getHomeAddress() {
         return homeAddress;
     }
 
     public void setHomeAddress(Address homeAddress) {
         this.homeAddress = homeAddress;
+    }
+
+    public PhoneNumber getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(PhoneNumber phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }
