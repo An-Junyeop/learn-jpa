@@ -1,4 +1,5 @@
 import model.Address;
+import model.AddressEntity;
 import model.Member;
 
 import javax.persistence.EntityManager;
@@ -18,10 +19,10 @@ public class Main {
 
             tx.begin();
 
-//            save(em);
-            Member findMember = find(em, 2L);
+            save(em);
+            Member findMember = find(em, 1L);
             update(findMember);
-//            remove(em, findMember);
+            remove(em, findMember);
 
             tx.commit();
         } catch (Exception e) {
@@ -53,9 +54,12 @@ public class Main {
         favoriteFoods.remove("피자");
         favoriteFoods.add("치킨");
 
-        List<Address> addressHistory = member.getAddressHistory();
-        addressHistory.remove(new Address("이천", "관고재로 8번길","4-4"));
-        addressHistory.add(new Address("이천", "관고재로 8번길","4-4, 2층"));
+//        List<Address> addressHistory = member.getAddressHistory();
+//        addressHistory.remove(new AddressEntity("이천", "관고재로 8번길","4-4"));
+//        addressHistory.add(new AddressEntity("이천", "관고재로 8번길","4-4, 2층"));
+        List<AddressEntity> addressHistory = member.getAddressHistory();
+        addressHistory.get(0).setZipcode("4-4, 2층");
+
     }
 
     private static void remove(EntityManager em, Member member) {
@@ -69,9 +73,13 @@ public class Main {
     private static Member find(EntityManager em, long id) {
         Member member = em.find(Member.class, id);
 
-        for (Address address : member.getAddressHistory()) {
+//        for (Address address : member.getAddressHistory()) {
+//            System.out.println(address.getCity() + ", " + address.getStreet() + ", "
+//                + address.getZipcode());
+//        }
+        for (AddressEntity address : member.getAddressHistory()) {
             System.out.println(address.getCity() + ", " + address.getStreet() + ", "
-                + address.getZipcode());
+                    + address.getZipcode());
         }
 
         for (String food : member.getFavoriteFoods()) {
@@ -91,7 +99,9 @@ public class Main {
         member.getFavoriteFoods().add("닭도리탕");
 
         // 주소 이력
-        member.getAddressHistory().add(new Address("이천", "관고재로 8번길", "4-4"));
+//        member.getAddressHistory().add(new Address("이천", "관고재로 8번길", "4-4"));
+        member.getAddressHistory().add(new AddressEntity("이천", "관고재로 8번길", "4-4"));
+
 
         em.persist(member);
     }
