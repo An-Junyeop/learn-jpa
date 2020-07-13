@@ -9,9 +9,24 @@ import java.util.Date;
 public class Period {
 
     @Temporal(TemporalType.DATE)
-    Date startDate;
+    private Date startDate;
 
     @Temporal(TemporalType.DATE)
-    Date endDate;
+    private Date endDate;
 
+    public Period() {
+    }
+
+    public Period(Date startDate, Date endDate) {
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
 }
