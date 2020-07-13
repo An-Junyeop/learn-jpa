@@ -1,6 +1,10 @@
 package model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Member {
@@ -9,18 +13,20 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
-
-    @Embedded Address homeAddress;
-    @Embedded PhoneNumber phoneNumber;
-    
-    @Embedded Period workPeriod;
     @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "startDate", column = @Column(name = "PLAY_START_DATE")),
-            @AttributeOverride(name = "endDate", column = @Column(name = "PLAY_END_DATE"))
-    })
-    Period playPeriod;
+    private Address homeAddress;
+
+    // CollectionTable을 생략하면 {엔티티이름}_{컬렉션 속성 이름}
+    @ElementCollection
+    @CollectionTable(name = "FAVORITE_FOODS",
+            joinColumns = @JoinColumn(name = "MEMBER_ID"))
+    @Column(name = "FOOD_NAME")
+    private Set<String> favoriteFoods = new HashSet<String>();
+
+    @ElementCollection
+    @CollectionTable(name = "ADDRESS",
+            joinColumns = @JoinColumn(name = "MEMBER_ID"))
+    private List<Address> addressHistory = new ArrayList<Address>();
 
     public Long getId() {
         return id;
@@ -28,14 +34,6 @@ public class Member {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public Address getHomeAddress() {
@@ -46,27 +44,19 @@ public class Member {
         this.homeAddress = homeAddress;
     }
 
-    public PhoneNumber getPhoneNumber() {
-        return phoneNumber;
+    public Set<String> getFavoriteFoods() {
+        return favoriteFoods;
     }
 
-    public void setPhoneNumber(PhoneNumber phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setFavoriteFoods(Set<String> favoriteFoods) {
+        this.favoriteFoods = favoriteFoods;
     }
 
-    public Period getWorkPeriod() {
-        return workPeriod;
+    public List<Address> getAddressHistory() {
+        return addressHistory;
     }
 
-    public void setWorkPeriod(Period workPeriod) {
-        this.workPeriod = workPeriod;
-    }
-
-    public Period getPlayPeriod() {
-        return playPeriod;
-    }
-
-    public void setPlayPeriod(Period playPeriod) {
-        this.playPeriod = playPeriod;
+    public void setAddressHistory(List<Address> addressHistory) {
+        this.addressHistory = addressHistory;
     }
 }
