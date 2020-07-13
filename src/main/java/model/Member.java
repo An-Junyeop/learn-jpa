@@ -13,6 +13,14 @@ public class Member {
 
     @Embedded Address homeAddress;
     @Embedded PhoneNumber phoneNumber;
+    
+    @Embedded Period workPeriod;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "startDate", column = @Column(name = "PLAY_START_DATE")),
+            @AttributeOverride(name = "endDate", column = @Column(name = "PLAY_END_DATE"))
+    })
+    Period playPeriod;
 
     public Long getId() {
         return id;
@@ -44,5 +52,21 @@ public class Member {
 
     public void setPhoneNumber(PhoneNumber phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public Period getWorkPeriod() {
+        return workPeriod;
+    }
+
+    public void setWorkPeriod(Period workPeriod) {
+        this.workPeriod = workPeriod;
+    }
+
+    public Period getPlayPeriod() {
+        return playPeriod;
+    }
+
+    public void setPlayPeriod(Period playPeriod) {
+        this.playPeriod = playPeriod;
     }
 }
