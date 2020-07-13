@@ -1,29 +1,18 @@
 package model;
 
-import org.hibernate.annotations.GeneratorType;
-
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
-public class Member extends BaseEntity {
+public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "MEMBER_ID")
     private Long id;
 
     private String name;
 
-    private String city;
-
-    private String street;
-
-    private String zipcode;
-
-    @OneToMany(mappedBy = "member")
-    private List<Order> orders = new ArrayList<Order>();
+    @Embedded Period workPeriod;
+    @Embedded Address homeAddress;
 
     public Long getId() {
         return id;
@@ -41,43 +30,19 @@ public class Member extends BaseEntity {
         this.name = name;
     }
 
-    public String getCity() {
-        return city;
+    public Period getWorkPeriod() {
+        return workPeriod;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setWorkPeriod(Period workPeriod) {
+        this.workPeriod = workPeriod;
     }
 
-    public String getStreet() {
-        return street;
+    public Address getHomeAddress() {
+        return homeAddress;
     }
 
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
-    public String getZipcode() {
-        return zipcode;
-    }
-
-    public void setZipcode(String zipcode) {
-        this.zipcode = zipcode;
-    }
-
-    public List<Order> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
-    }
-
-    public void addOrder(Order order) {
-        this.orders.add(order);
-
-        if(order.getMember() != this) {
-            order.setMember(this);
-        }
+    public void setHomeAddress(Address homeAddress) {
+        this.homeAddress = homeAddress;
     }
 }
