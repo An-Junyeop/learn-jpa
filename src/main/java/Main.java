@@ -1,10 +1,10 @@
-import model.DeliveryDTO;
-import model.Member;
 import model.Order;
-import model.OrderStatus;
+import model.OrderItem;
 
-import javax.persistence.*;
-import java.util.Date;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
 import java.util.List;
 
 public class Main {
@@ -16,10 +16,12 @@ public class Main {
         try {
             tx.begin();
 
+            OrderItem oi = new OrderItem();
+
             // JOIN
-            List<Order> resultList = em
-                    .createQuery("select distinct o from Order o join fetch o.orderItems " +
-                            "join fetch o.delivery")
+            List result = em
+                    .createQuery("select i from Item i " +
+                            "where type(i) in (Book, Movie)")
                     .getResultList();
 
 
