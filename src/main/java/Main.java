@@ -1,5 +1,6 @@
 import model.DeliveryDTO;
 import model.Member;
+import model.Order;
 import model.OrderStatus;
 
 import javax.persistence.*;
@@ -16,11 +17,11 @@ public class Main {
             tx.begin();
 
             // JOIN
-            TypedQuery<Object[]> query = em.createQuery("select m, o from Member m left join Order o " +
-                    "on o.status = :status", Object[].class);
-
-            List<Object[]> result = query.setParameter("status", OrderStatus.ORDER)
+            List<Order> resultList = em
+                    .createQuery("select distinct o from Order o join fetch o.orderItems " +
+                            "join fetch o.delivery")
                     .getResultList();
+
 
             tx.commit();
         } catch (Exception e) {
