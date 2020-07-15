@@ -1,5 +1,5 @@
 package model;
 
-enum DeliveryStatus {
+public enum DeliveryStatus {
     READY, COMP
 }

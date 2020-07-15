@@ -1,5 +1,6 @@
 import model.DeliveryDTO;
 import model.Member;
+import model.OrderStatus;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -15,12 +16,11 @@ public class Main {
             tx.begin();
 
             // JOIN
-            Query query = em
-                    .createQuery("select count(m.id) from Member m, Item i " +
-                            "where m.name = i.name");
+            TypedQuery<Object[]> query = em.createQuery("select m, o from Member m left join Order o " +
+                    "on o.status = :status", Object[].class);
 
-            // 페이징 API
-            Object resultList = query.getSingleResult();
+            List<Object[]> result = query.setParameter("status", OrderStatus.ORDER)
+                    .getResultList();
 
             tx.commit();
         } catch (Exception e) {

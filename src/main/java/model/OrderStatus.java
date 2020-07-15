@@ -1,5 +1,5 @@
 package model;
 
-enum OrderStatus {
+public enum OrderStatus {
     ORDER, CANCEL
 }
