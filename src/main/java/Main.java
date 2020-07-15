@@ -1,4 +1,5 @@
 import model.DeliveryDTO;
+import model.Member;
 
 import javax.persistence.*;
 import java.util.List;
@@ -12,11 +13,12 @@ public class Main {
         try {
             tx.begin();
 
-            // NEW 명령어를 이용한 객체 변환 작업 간소화
-            TypedQuery<DeliveryDTO> query =
-                    em.createQuery("SELECT new model.DeliveryDTO(d.id, d.status) from Delivery d", DeliveryDTO.class);
+            TypedQuery<Member> query = em.createQuery("SELECT m from Member m ORDER BY m.id DESC", Member.class);
 
-            List<DeliveryDTO> resultList = query.getResultList();
+            // 페이징 API
+            query.setFirstResult(10);
+            query.setMaxResults(20);
+            List<Member> resultList = query.getResultList();
 
             tx.commit();
         } catch (Exception e) {
