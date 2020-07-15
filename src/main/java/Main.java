@@ -21,7 +21,7 @@ public class Main {
             // JOIN
             List result = em
                     .createQuery("select i from Item i " +
-                            "where type(i) in (Book, Movie)")
+                            "where treat(i as Book).author = 'kim'")
                     .getResultList();
 
 
