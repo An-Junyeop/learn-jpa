@@ -15,14 +15,12 @@ public class Main {
             tx.begin();
 
             // JOIN
-            TypedQuery<Member> query = em
-                    .createQuery("SELECT m FROM Member m LEFT OUTER JOIN m.orders", Member.class);
+            Query query = em
+                    .createQuery("select count(m.id) from Member m, Item i " +
+                            "where m.name = i.name");
 
             // 페이징 API
-            query.setFirstResult(10); // 시작 11부터
-            query.setMaxResults(20); // 20개의 데이터 ex. 11~30
-            List<Member> resultList = query
-                    .getResultList();
+            Object resultList = query.getSingleResult();
 
             tx.commit();
         } catch (Exception e) {
