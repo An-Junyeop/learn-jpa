@@ -16,12 +16,9 @@ public class Main {
         try {
             tx.begin();
 
-            OrderItem oi = new OrderItem();
-
             // JOIN
             List result = em
-                    .createQuery("select i from Item i " +
-                            "where treat(i as Book).author = 'kim'")
+                    .createQuery("select function('group_concat', i.name) from Item i")
                     .getResultList();
 
 
