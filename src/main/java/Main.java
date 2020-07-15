@@ -2,6 +2,7 @@ import model.DeliveryDTO;
 import model.Member;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 public class Main {
@@ -13,12 +14,17 @@ public class Main {
         try {
             tx.begin();
 
-            TypedQuery<Member> query = em.createQuery("SELECT m from Member m ORDER BY m.id DESC", Member.class);
+            // JOIN
+            TypedQuery<Member> query = em
+                    .createQuery("SELECT m from Member m INNER join m.orders o " +
+                            "where o.createDate = :createDate", Member.class);
 
             // 페이징 API
             query.setFirstResult(10); // 시작 11부터
             query.setMaxResults(20); // 20개의 데이터 ex. 11~30
-            List<Member> resultList = query.getResultList();
+            List<Member> resultList = query
+                    .setParameter("createDate", new Date())
+                    .getResultList();
 
             tx.commit();
         } catch (Exception e) {
