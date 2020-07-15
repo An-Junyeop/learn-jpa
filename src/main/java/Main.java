@@ -16,8 +16,8 @@ public class Main {
             TypedQuery<Member> query = em.createQuery("SELECT m from Member m ORDER BY m.id DESC", Member.class);
 
             // 페이징 API
-            query.setFirstResult(10);
-            query.setMaxResults(20);
+            query.setFirstResult(10); // 시작 11부터
+            query.setMaxResults(20); // 20개의 데이터 ex. 11~30
             List<Member> resultList = query.getResultList();
 
             tx.commit();
