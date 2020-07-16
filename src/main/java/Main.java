@@ -1,3 +1,4 @@
+import model.Member;
 import model.Order;
 import model.OrderItem;
 
@@ -16,9 +17,8 @@ public class Main {
         try {
             tx.begin();
 
-            // JOIN
-            List result = em
-                    .createQuery("select function('group_concat', i.name) from Item i")
+            List<Member> resultList = em.createNamedQuery("Member.findByName")
+                    .setParameter("name", "회원이름")
                     .getResultList();
 
 
