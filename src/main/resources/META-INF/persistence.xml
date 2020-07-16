@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" version="2.1">
     <persistence-unit name="learn-jpa">
+        <mapping-file>META-INF/ormMember.xml</mapping-file>
         <properties>
-
             <!-- 필수 속성 -->
             <!-- H2 데이터베이스를 사용하기 때문에 H2 드라이버 설정-->
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>

@@ -21,6 +21,8 @@ public class Main {
                     .setParameter("name", "회원이름")
                     .getResultList();
 
+            Long count = em.createNamedQuery("Member.count", Long.class)
+                    .getSingleResult();
 
             tx.commit();
         } catch (Exception e) {
