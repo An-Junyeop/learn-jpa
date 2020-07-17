@@ -1,11 +1,10 @@
+import com.sun.org.apache.bcel.internal.generic.LSTORE;
 import model.Member;
-import model.Order;
-import model.OrderItem;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
+import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.List;
 
 public class Main {
@@ -17,12 +16,15 @@ public class Main {
         try {
             tx.begin();
 
-            List<Member> resultList = em.createNamedQuery("Member.findByName")
-                    .setParameter("name", "회원이름")
-                    .getResultList();
+            CriteriaBuilder cb = em.getCriteriaBuilder();
 
-            Long count = em.createNamedQuery("Member.count", Long.class)
-                    .getSingleResult();
+            CriteriaQuery<Object[]> cq = cb.createQuery(Object[].class);
+
+            Root<Member> m = cq.from(Member.class);
+            cq.multiselect(m.get("id"), m.get("name")).distinct(true);
+            // cq.select(cb.array(m.get("id"), m.get("name"))).distinct(true); // 위와 동일
+
+            List<Object[]> result = em.createQuery(cq).getResultList();
 
             tx.commit();
         } catch (Exception e) {
