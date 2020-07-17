@@ -20,16 +20,15 @@ public class Main {
             tx.begin();
 
             CriteriaBuilder cb = em.getCriteriaBuilder();
-            CriteriaQuery<Object[]> cq = cb.createQuery(Object[].class);
+            CriteriaQuery<Member> cq = cb.createQuery(Member.class);
 
             Root<Member> m = cq.from(Member.class);
-            Join<Member, Order> o = m.join("orders", JoinType.INNER);
+            m.fetch("orders", JoinType.INNER);
 
-            cq.multiselect(m, o)
-                    .where(cb.equal(o.get("status"), OrderStatus.ORDER));
+            cq.select(m);
+            List<Member> result = em.createQuery(cq).getResultList();
 
-            List<Object[]> result = em.createQuery(cq).getResultList();
-
+            System.out.println(result.get(0).getOrders().get(0).getStatus());
             tx.commit();
         } catch (Exception e) {
             e.printStackTrace();
