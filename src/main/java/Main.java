@@ -31,7 +31,8 @@ public class Main {
                     oi.get("order").get("member").get("name"),
                     maxCnt,
                     minCnt
-            );
+            )
+            .having(cb.gt(minCnt, 5));
             cq.groupBy(oi.get("order").get("member").get("id"));
             List<Object[]> result = em.createQuery(cq).getResultList();
 
