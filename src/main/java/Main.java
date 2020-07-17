@@ -1,4 +1,5 @@
 import com.sun.org.apache.xpath.internal.operations.Or;
+import model.Member;
 import model.Order;
 import model.OrderItem;
 
@@ -19,17 +20,19 @@ public class Main {
             tx.begin();
 
             CriteriaBuilder cb = em.getCriteriaBuilder();
-            CriteriaQuery<OrderItem> query = cb.createQuery(OrderItem.class);
-            Subquery<Double> subQuery = query.subquery(Double.class);
+            CriteriaQuery<Order> query = cb.createQuery(Order.class);
+            Root<Order> o = query.from(Order.class);
 
-            Root<OrderItem> oi2 = subQuery.from(OrderItem.class);
-            subQuery.select(cb.avg(oi2.<Integer>get("count")));
+            Subquery<Member> subQuery = query.subquery(Member.class);
+            Root<Order> subO = subQuery.correlate(o); // 메인 쿼리의 별칭을 가져옴
+            Join<Order, Member> m = subO.join("member");
+            subQuery.select(m)
+                    .where(cb.equal(m.get("name"), "zzzz"));
 
-            Root<OrderItem> oi = query.from(OrderItem.class);
-            query.select(oi)
-                    .where(cb.ge(oi.<Number>get("count"), subQuery));
+            query.select(o)
+                    .where(cb.exists(subQuery));
 
-            List<OrderItem> result = em.createQuery(query).getResultList();
+            List<Order> result = em.createQuery(query).getResultList();
 
             tx.commit();
         } catch (Exception e) {
