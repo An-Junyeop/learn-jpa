@@ -1,11 +1,13 @@
-import com.sun.org.apache.bcel.internal.generic.LSTORE;
-import model.Delivery;
-import model.DeliveryDTO;
-import model.Member;
+import model.Order;
+import model.OrderItem;
 
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Root;
 import java.util.List;
 
@@ -19,19 +21,20 @@ public class Main {
             tx.begin();
 
             CriteriaBuilder cb = em.getCriteriaBuilder();
-            CriteriaQuery<Tuple> cq = cb.createTupleQuery();
+            CriteriaQuery<Object[]> cq = cb.createQuery(Object[].class);
+            Root<OrderItem> oi = cq.from(OrderItem.class);
 
-            Root<Member> m = cq.from(Member.class);
+            Expression<Integer> maxCnt = cb.max(oi.<Integer>get("count"));
+            Expression<Integer> minCnt = cb.min(oi.<Integer>get("count"));
+
             cq.multiselect(
-                    m.get("name").alias("memberName"),
-                    m.get("id").alias("memberId")
+                    oi.get("order").get("member").get("name"),
+                    maxCnt,
+                    minCnt
             );
-            List<Tuple> result = em.createQuery(cq).getResultList();
+            cq.groupBy(oi.get("order").get("member").get("id"));
+            List<Object[]> result = em.createQuery(cq).getResultList();
 
-            for (Tuple tuple : result) {
-                String memberName = tuple.get("memberName", String.class);
-                Long memberId = tuple.get("memberId", Long.class);
-            }
             tx.commit();
         } catch (Exception e) {
             e.printStackTrace();
