@@ -1,7 +1,6 @@
-import model.Member;
+import com.sun.org.apache.xpath.internal.operations.Or;
 import model.Order;
 import model.OrderItem;
-import model.OrderStatus;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -20,15 +19,18 @@ public class Main {
             tx.begin();
 
             CriteriaBuilder cb = em.getCriteriaBuilder();
-            CriteriaQuery<Member> cq = cb.createQuery(Member.class);
+            CriteriaQuery<OrderItem> query = cb.createQuery(OrderItem.class);
+            Subquery<Double> subQuery = query.subquery(Double.class);
 
-            Root<Member> m = cq.from(Member.class);
-            m.fetch("orders", JoinType.INNER);
+            Root<OrderItem> oi2 = subQuery.from(OrderItem.class);
+            subQuery.select(cb.avg(oi2.<Integer>get("count")));
 
-            cq.select(m);
-            List<Member> result = em.createQuery(cq).getResultList();
+            Root<OrderItem> oi = query.from(OrderItem.class);
+            query.select(oi)
+                    .where(cb.ge(oi.<Number>get("count"), subQuery));
 
-            System.out.println(result.get(0).getOrders().get(0).getStatus());
+            List<OrderItem> result = em.createQuery(query).getResultList();
+
             tx.commit();
         } catch (Exception e) {
             e.printStackTrace();
