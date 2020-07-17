@@ -19,15 +19,19 @@ public class Main {
             tx.begin();
 
             CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Tuple> cq = cb.createTupleQuery();
 
-            CriteriaQuery<DeliveryDTO> cq = cb.createQuery(DeliveryDTO.class);
+            Root<Member> m = cq.from(Member.class);
+            cq.multiselect(
+                    m.get("name").alias("memberName"),
+                    m.get("id").alias("memberId")
+            );
+            List<Tuple> result = em.createQuery(cq).getResultList();
 
-            Root<Delivery> d = cq.from(Delivery.class);
-
-            cq.select(cb.construct(DeliveryDTO.class, d.get("id"), d.get("status")));
-
-            List<DeliveryDTO> result = em.createQuery(cq).getResultList();
-
+            for (Tuple tuple : result) {
+                String memberName = tuple.get("memberName", String.class);
+                Long memberId = tuple.get("memberId", Long.class);
+            }
             tx.commit();
         } catch (Exception e) {
             e.printStackTrace();
