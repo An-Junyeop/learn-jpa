@@ -1,14 +1,13 @@
+import model.Member;
 import model.Order;
 import model.OrderItem;
+import model.OrderStatus;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.List;
 
 public class Main {
@@ -22,21 +21,12 @@ public class Main {
 
             CriteriaBuilder cb = em.getCriteriaBuilder();
             CriteriaQuery<Object[]> cq = cb.createQuery(Object[].class);
-            Root<OrderItem> oi = cq.from(OrderItem.class);
 
-            Expression<Integer> maxCnt = cb.max(oi.<Integer>get("count"));
-            Expression<Integer> minCnt = cb.min(oi.<Integer>get("count"));
+            Root<Member> m = cq.from(Member.class);
+            Join<Member, Order> o = m.join("orders", JoinType.INNER);
 
-            cq.multiselect(
-                    oi.get("order").get("member").get("name"),
-                    maxCnt,
-                    minCnt
-            );
-
-            cq.groupBy(oi.get("order").get("member").get("id"))
-                    .having(cb.gt(minCnt, 5));
-
-            cq.orderBy(cb.asc(oi.get("order").get("member").get("id")));
+            cq.multiselect(m, o)
+                    .where(cb.equal(o.get("status"), OrderStatus.ORDER));
 
             List<Object[]> result = em.createQuery(cq).getResultList();
 
