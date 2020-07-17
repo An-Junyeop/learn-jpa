@@ -27,7 +27,9 @@ public class Main {
             Root<Order> subO = subQuery.correlate(o); // 메인 쿼리의 별칭을 가져옴
             Join<Order, Member> m = subO.join("member");
             subQuery.select(m)
-                    .where(cb.equal(m.get("name"), "zzzz"));
+                    .where(cb.in(m.get("name"))
+                            .value("zzzzz")
+                            .value("회원"));
 
             query.select(o)
                     .where(cb.exists(subQuery));
