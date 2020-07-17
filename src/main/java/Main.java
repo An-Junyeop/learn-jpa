@@ -1,4 +1,6 @@
 import com.sun.org.apache.bcel.internal.generic.LSTORE;
+import model.Delivery;
+import model.DeliveryDTO;
 import model.Member;
 
 import javax.persistence.*;
@@ -18,13 +20,13 @@ public class Main {
 
             CriteriaBuilder cb = em.getCriteriaBuilder();
 
-            CriteriaQuery<Object[]> cq = cb.createQuery(Object[].class);
+            CriteriaQuery<DeliveryDTO> cq = cb.createQuery(DeliveryDTO.class);
 
-            Root<Member> m = cq.from(Member.class);
-            cq.multiselect(m.get("id"), m.get("name")).distinct(true);
-            // cq.select(cb.array(m.get("id"), m.get("name"))).distinct(true); // 위와 동일
+            Root<Delivery> d = cq.from(Delivery.class);
 
-            List<Object[]> result = em.createQuery(cq).getResultList();
+            cq.select(cb.construct(DeliveryDTO.class, d.get("id"), d.get("status")));
+
+            List<DeliveryDTO> result = em.createQuery(cq).getResultList();
 
             tx.commit();
         } catch (Exception e) {
