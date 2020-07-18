@@ -24,14 +24,12 @@ public class Main {
             CriteriaQuery<Object[]> query = cb.createQuery(Object[].class);
             Root<Member> m = query.from(Member.class);
 
-            query.multiselect(m.get("id"),
-                    cb.selectCase()
-                            .when(cb.equal(m.get("address").get("city"), "서울"), "기본 배송")
-                            .when(cb.notEqual(m.get("address").get("city"), "서울"), "특수 배송")
-                            .otherwise("해외 배송")
-            );
+            query.multiselect(m.get("id"), m.get("name"))
+                    .where(cb.equal(m.get("name"), cb.parameter(String.class, "usernameParam")));
 
-            List<Object[]> result = em.createQuery(query).getResultList();
+            List<Object[]> result = em.createQuery(query)
+                    .setParameter("usernameParam", "zzzz")
+                    .getResultList();
 
             tx.commit();
         } catch (Exception e) {
