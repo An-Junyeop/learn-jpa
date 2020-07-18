@@ -8,6 +8,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.criteria.*;
+import java.util.Date;
 import java.util.List;
 
 public class Main {
@@ -20,21 +21,17 @@ public class Main {
             tx.begin();
 
             CriteriaBuilder cb = em.getCriteriaBuilder();
-            CriteriaQuery<Order> query = cb.createQuery(Order.class);
-            Root<Order> o = query.from(Order.class);
+            CriteriaQuery<Object[]> query = cb.createQuery(Object[].class);
+            Root<Member> m = query.from(Member.class);
 
-            Subquery<Member> subQuery = query.subquery(Member.class);
-            Root<Order> subO = subQuery.correlate(o); // 메인 쿼리의 별칭을 가져옴
-            Join<Order, Member> m = subO.join("member");
-            subQuery.select(m)
-                    .where(cb.in(m.get("name"))
-                            .value("zzzzz")
-                            .value("회원"));
+            query.multiselect(m.get("id"),
+                    cb.selectCase()
+                            .when(cb.equal(m.get("address").get("city"), "서울"), "기본 배송")
+                            .when(cb.notEqual(m.get("address").get("city"), "서울"), "특수 배송")
+                            .otherwise("해외 배송")
+            );
 
-            query.select(o)
-                    .where(cb.exists(subQuery));
-
-            List<Order> result = em.createQuery(query).getResultList();
+            List<Object[]> result = em.createQuery(query).getResultList();
 
             tx.commit();
         } catch (Exception e) {
