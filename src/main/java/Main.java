@@ -7,7 +7,6 @@ import model.OrderStatus;
 import javax.persistence.*;
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Main {
@@ -21,25 +20,29 @@ public class Main {
 
             // 검색조건
             Integer count = 3;
-            OrderStatus status = OrderStatus.CANCEL;
-            String name = "test";
+            OrderStatus status = null;
+            String name = null;
 
             // JPQL 동적 쿼리 생성
-            StringBuilder jpql = new StringBuilder("select o from Order o join o.orderItems oi join o.member m");
-            List<String> criteria = new ArrayList<String>();
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Order> cq = cb.createQuery(Order.class);
 
-            if (count != null) criteria.add(" oi.count > :count");
-            if (status != null) criteria.add(" o.status = :status");
-            if (name != null) criteria.add(" m.name = :name");
+            Root<Order> o = cq.from(Order.class);
+            Join<Order, OrderItem> oi = o.join("orderItems");
+            Join<Order, Member> m = o.join("member");
 
-            if(criteria.size() > 0) jpql.append(" where ");
+            List<Predicate> criteria = new ArrayList<Predicate>();
 
-            for (int i = 0; i < criteria.size(); i ++) {
-                if (i > 0) jpql.append(" and ");
-                jpql.append(criteria.get(i));
-            }
+            if (count != null) criteria.add(cb.ge(oi.<Number>get("count"),
+                    cb.parameter(Integer.class, "count")));
+            if (status != null) criteria.add(cb.equal(o.get("status"),
+                    cb.parameter(OrderStatus.class, "status")));
+            if (name != null) criteria.add(cb.equal(m.get("name"),
+                    cb.parameter(String.class, "name")));
 
-            TypedQuery<Order> query = em.createQuery(jpql.toString(), Order.class);
+            cq.where(cb.and(criteria.toArray(new Predicate[0])));
+
+            TypedQuery<Order> query = em.createQuery(cq);
 
             if (count != null) query.setParameter("count", count);
             if (status != null) query.setParameter("status", status);
