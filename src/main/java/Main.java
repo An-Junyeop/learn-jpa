@@ -26,8 +26,9 @@ public class Main {
 
             query.from(qOrder)
                     .innerJoin(qOrder.member, qMember)
+                    .fetch()
                     .leftJoin(qOrder.orderItems, qOrderItem)
-                    .on(qOrderItem.count.gt(2))
+                    .fetch()
                     .list(qOrder);
 
 
