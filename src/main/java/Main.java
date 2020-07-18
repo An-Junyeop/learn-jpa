@@ -21,15 +21,14 @@ public class Main {
             tx.begin();
 
             CriteriaBuilder cb = em.getCriteriaBuilder();
-            CriteriaQuery<Object[]> query = cb.createQuery(Object[].class);
-            Root<Member> m = query.from(Member.class);
+            CriteriaQuery<Long> cq = cb.createQuery(Long.class);
 
-            query.multiselect(m.get("id"), m.get("name"))
-                    .where(cb.equal(m.get("name"), cb.parameter(String.class, "usernameParam")));
+            Root<Member> m = cq.from(Member.class);
 
-            List<Object[]> result = em.createQuery(query)
-                    .setParameter("usernameParam", "zzzz")
-                    .getResultList();
+            Expression<Long> fn = cb.function("COUNT", Long.class, m);
+            cq.select(fn);
+
+            Long result = em.createQuery(cq).getSingleResult();
 
             tx.commit();
         } catch (Exception e) {
