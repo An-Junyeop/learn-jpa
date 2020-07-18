@@ -24,11 +24,8 @@ public class Main {
             QOrderItem qOrderItem = new QOrderItem("oi");
             QMember qMember = new QMember("m");
 
-            query.from(qOrder)
-                    .innerJoin(qOrder.member, qMember)
-                    .fetch()
-                    .leftJoin(qOrder.orderItems, qOrderItem)
-                    .fetch()
+            query.from(qOrder, qMember)
+                    .where(qOrder.member.eq(qMember))
                     .list(qOrder);
 
 
