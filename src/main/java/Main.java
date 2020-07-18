@@ -1,6 +1,8 @@
 import com.mysema.query.jpa.impl.JPAQuery;
-import static model.QOrder.order;
-import static model.QOrderItem.orderItem;
+import model.Order;
+import model.QMember;
+import model.QOrder;
+import model.QOrderItem;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -18,11 +20,15 @@ public class Main {
             tx.begin();
 
             JPAQuery query = new JPAQuery(em);
+            QOrder qOrder = new QOrder("o");
+            QOrderItem qOrderItem = new QOrderItem("oi");
+            QMember qMember = new QMember("m");
 
-            query.from(orderItem)
-                    .groupBy(orderItem.order.id)
-                    .having(orderItem.count.sum().gt(3))
-                    .list(orderItem);
+            query.from(qOrder)
+                    .innerJoin(qOrder.member, qMember)
+                    .leftJoin(qOrder.orderItems, qOrderItem)
+                    .list(qOrder);
+
 
             tx.commit();
         } catch (Exception e) {
