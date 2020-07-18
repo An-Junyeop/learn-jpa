@@ -1,12 +1,13 @@
 import com.mysema.query.jpa.impl.JPAQuery;
-import com.sun.org.apache.xpath.internal.operations.Or;
-import model.*;
-import model.Order;
+import model.Member;
+import static model.QMember.member;
 
-import javax.persistence.*;
-import javax.persistence.criteria.*;
-import java.util.ArrayList;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
 import java.util.List;
+
 
 public class Main {
     public static void main(String[] args) {
@@ -19,12 +20,11 @@ public class Main {
 
 
             JPAQuery query = new JPAQuery(em);
-            QMember qMember = new QMember("m"); // 생성되는 JPQL의 별칭 'm'
 
-            List<Member> members = query.from(qMember)
-                    .where(qMember.name.eq("zzzz"))
-                    .orderBy(qMember.name.desc())
-                    .list(qMember);
+            List<Member> members = query.from(member)
+                    .where(member.name.eq("zzzz"))
+                    .orderBy(member.name.desc())
+                    .list(member);
 
             tx.commit();
         } catch (Exception e) {
