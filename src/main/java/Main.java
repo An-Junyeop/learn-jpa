@@ -1,8 +1,6 @@
 import com.sun.org.apache.xpath.internal.operations.Or;
-import model.Member;
+import model.*;
 import model.Order;
-import model.OrderItem;
-import model.OrderStatus;
 
 import javax.persistence.*;
 import javax.persistence.criteria.*;
@@ -20,8 +18,8 @@ public class Main {
 
             // 검색조건
             Integer count = 3;
-            OrderStatus status = null;
-            String name = null;
+            OrderStatus status = OrderStatus.CANCEL;
+            String name = "null";
 
             // JPQL 동적 쿼리 생성
             CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -33,11 +31,11 @@ public class Main {
 
             List<Predicate> criteria = new ArrayList<Predicate>();
 
-            if (count != null) criteria.add(cb.ge(oi.<Number>get("count"),
+            if (count != null) criteria.add(cb.ge(oi.get(OrderItem_.count),
                     cb.parameter(Integer.class, "count")));
-            if (status != null) criteria.add(cb.equal(o.get("status"),
+            if (status != null) criteria.add(cb.equal(o.get(Order_.status),
                     cb.parameter(OrderStatus.class, "status")));
-            if (name != null) criteria.add(cb.equal(m.get("name"),
+            if (name != null) criteria.add(cb.equal(m.get(Member_.name),
                     cb.parameter(String.class, "name")));
 
             cq.where(cb.and(criteria.toArray(new Predicate[0])));
