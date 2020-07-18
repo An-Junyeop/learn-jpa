@@ -2,12 +2,11 @@ import com.sun.org.apache.xpath.internal.operations.Or;
 import model.Member;
 import model.Order;
 import model.OrderItem;
+import model.OrderStatus;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
+import javax.persistence.*;
 import javax.persistence.criteria.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -20,15 +19,33 @@ public class Main {
         try {
             tx.begin();
 
-            CriteriaBuilder cb = em.getCriteriaBuilder();
-            CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+            // 검색조건
+            Integer count = 3;
+            OrderStatus status = OrderStatus.CANCEL;
+            String name = "test";
 
-            Root<Member> m = cq.from(Member.class);
+            // JPQL 동적 쿼리 생성
+            StringBuilder jpql = new StringBuilder("select o from Order o join o.orderItems oi join o.member m");
+            List<String> criteria = new ArrayList<String>();
 
-            Expression<Long> fn = cb.function("COUNT", Long.class, m);
-            cq.select(fn);
+            if (count != null) criteria.add(" oi.count > :count");
+            if (status != null) criteria.add(" o.status = :status");
+            if (name != null) criteria.add(" m.name = :name");
 
-            Long result = em.createQuery(cq).getSingleResult();
+            if(criteria.size() > 0) jpql.append(" where ");
+
+            for (int i = 0; i < criteria.size(); i ++) {
+                if (i > 0) jpql.append(" and ");
+                jpql.append(criteria.get(i));
+            }
+
+            TypedQuery<Order> query = em.createQuery(jpql.toString(), Order.class);
+
+            if (count != null) query.setParameter("count", count);
+            if (status != null) query.setParameter("status", status);
+            if (name != null) query.setParameter("name", name);
+
+            List<Order> result = query.getResultList();
 
             tx.commit();
         } catch (Exception e) {
