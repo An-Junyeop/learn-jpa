@@ -1,3 +1,4 @@
+import com.mysema.query.jpa.impl.JPAQuery;
 import com.sun.org.apache.xpath.internal.operations.Or;
 import model.*;
 import model.Order;
@@ -16,37 +17,14 @@ public class Main {
         try {
             tx.begin();
 
-            // 검색조건
-            Integer count = 3;
-            OrderStatus status = OrderStatus.CANCEL;
-            String name = "null";
 
-            // JPQL 동적 쿼리 생성
-            CriteriaBuilder cb = em.getCriteriaBuilder();
-            CriteriaQuery<Order> cq = cb.createQuery(Order.class);
+            JPAQuery query = new JPAQuery(em);
+            QMember qMember = new QMember("m"); // 생성되는 JPQL의 별칭 'm'
 
-            Root<Order> o = cq.from(Order.class);
-            Join<Order, OrderItem> oi = o.join("orderItems");
-            Join<Order, Member> m = o.join("member");
-
-            List<Predicate> criteria = new ArrayList<Predicate>();
-
-            if (count != null) criteria.add(cb.ge(oi.get(OrderItem_.count),
-                    cb.parameter(Integer.class, "count")));
-            if (status != null) criteria.add(cb.equal(o.get(Order_.status),
-                    cb.parameter(OrderStatus.class, "status")));
-            if (name != null) criteria.add(cb.equal(m.get(Member_.name),
-                    cb.parameter(String.class, "name")));
-
-            cq.where(cb.and(criteria.toArray(new Predicate[0])));
-
-            TypedQuery<Order> query = em.createQuery(cq);
-
-            if (count != null) query.setParameter("count", count);
-            if (status != null) query.setParameter("status", status);
-            if (name != null) query.setParameter("name", name);
-
-            List<Order> result = query.getResultList();
+            List<Member> members = query.from(qMember)
+                    .where(qMember.name.eq("zzzz"))
+                    .orderBy(qMember.name.desc())
+                    .list(qMember);
 
             tx.commit();
         } catch (Exception e) {
