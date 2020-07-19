@@ -22,16 +22,16 @@ public class Main {
         try {
             tx.begin();
 
-            List<Object[]> result = em
-                    .createNamedQuery("Member.memberWithOrderCount")
-                    .getResultList();
+            StoredProcedureQuery spq =
+                    em.createStoredProcedureQuery("proc_multiply");
+            spq.registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter(2, Integer.class, ParameterMode.OUT);
 
-            for (Object[] row : result) {
-                Member member = (Member) row[0];
-                BigInteger orderCount = (BigInteger) row[1];
+            spq.setParameter(1, 100);
+            spq.execute();
 
-                System.out.println(member.getName() + ", " + orderCount);
-            }
+            Integer out = (Integer) spq.getOutputParameterValue(2);
+            System.out.println(out);
 
             tx.commit();
         } catch (Exception e) {
