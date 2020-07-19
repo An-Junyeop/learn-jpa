@@ -2,13 +2,11 @@ import com.mysema.query.BooleanBuilder;
 import com.mysema.query.jpa.impl.JPAQuery;
 import com.mysema.query.types.path.StringPath;
 import model.Item;
+import model.Member;
 import model.QItem;
 import org.h2.util.StringUtils;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
+import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
@@ -22,16 +20,17 @@ public class Main {
         try {
             tx.begin();
 
+            String sql = "SELECT * " +
+                    "FROM MEMBER WHERE NAME = ?";
 
 
-            JPAQuery query = new JPAQuery(em);
+            Query query = em.createNativeQuery(sql, Member.class)
+                    .setParameter(1, "zzzz"); // 위치기반의 파라미터만 지원
 
-            QItem item = QItem.item;
-            StringPath stringPath = new StringPath("name");
+            List<Member> result = query.getResultList(); // 결과가 영속성 컨텍스트에서 관리됨
 
-            query.from(item)
-                    .where(item.name.isTestStart())
-                    .list(item);
+            System.out.println(result.get(0).getName());
+
             tx.commit();
         } catch (Exception e) {
             e.printStackTrace();
