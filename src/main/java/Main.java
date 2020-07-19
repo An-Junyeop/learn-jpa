@@ -1,6 +1,7 @@
 import com.mysema.query.Tuple;
 import com.mysema.query.jpa.JPASubQuery;
 import com.mysema.query.jpa.impl.JPAQuery;
+import com.mysema.query.types.Projections;
 import com.sun.org.apache.xpath.internal.operations.Or;
 import model.*;
 
@@ -22,14 +23,28 @@ public class Main {
 
             JPAQuery query = new JPAQuery(em);
 
-            QOrder order = QOrder.order;
-            List<OrderStatus> result = query.from(order).list(order.status);
+            QDelivery delivery = QDelivery.delivery;
 
-            QMember member = QMember.member;
-            List<Tuple> tuples = query.from(member).list(member.id, member.address);
+            // setter에 접근하여 값을 매핑
+            List<DeliveryDTO> result = query.distinct().from(delivery).list(
+                    Projections.bean(DeliveryDTO.class,
+                            delivery.id.as("id"),
+                            delivery.status.as("status"))
+            );
 
-            tuples.get(0).get(member.id);
-            tuples.get(0).get(member.address.city);
+            // 필드 자체에 접근하여 값을 매핑
+            /*List<DeliveryDTO> result1 = query.from(delivery).list(
+                    Projections.fields(DeliveryDTO.class,
+                            delivery.id.as("id"),
+                            delivery.status.as("status"))
+            );*/
+
+            // 생성자에 접근하여 값을 매핑 (파라미터 순서가 같은 생성자 필요)
+            /*List<DeliveryDTO> result2 = query.from(delivery).list(
+                    Projections.constructor(DeliveryDTO.class,
+                            delivery.id.as("id"),
+                            delivery.status.as("status"))
+            );*/
 
             tx.commit();
         } catch (Exception e) {
