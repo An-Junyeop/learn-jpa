@@ -22,24 +22,11 @@ public class Main {
 
             JPAQuery query = new JPAQuery(em);
 
-            String name = "시골개발자";
-            Integer price = 10000;
-
             QItem item = QItem.item;
 
-            BooleanBuilder builder = new BooleanBuilder();
-
-            if (!"".equals(name) && name != null) {
-                builder.and(item.name.contains(name));
-            }
-            if (price != null) {
-                builder.or(item.price.gt(price));
-            }
-
-            List<Item> result = query.from(item)
-                    .where(builder)
+            query.from(item)
+                    .where(item.isExpensive(20000))
                     .list(item);
-
             tx.commit();
         } catch (Exception e) {
             e.printStackTrace();
