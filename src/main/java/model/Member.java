@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@NamedQuery(
-        name = "Member.findByName",
-        query = "select m from Member m where m.name = :name"
+@SqlResultSetMapping(name = "memberWithOrderCount",
+        entities = {@EntityResult(entityClass = Member.class)},
+        columns = {@ColumnResult(name = "ORDER_COUNT")}
 )
 public class Member extends BaseEntity {
 

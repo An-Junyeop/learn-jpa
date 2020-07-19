@@ -7,6 +7,7 @@ import model.QItem;
 import org.h2.util.StringUtils;
 
 import javax.persistence.*;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
@@ -20,16 +21,27 @@ public class Main {
         try {
             tx.begin();
 
-            String sql = "SELECT MEMBER_ID, NAME " +
-                    "FROM MEMBER WHERE NAME = ?";
+            String sql =
+                    "SELECT M.*, I.ORDER_COUNT " +
+                            "FROM MEMBER M " +
+                            "LEFT JOIN " +
+                            "   (SELECT MEMBER_ID, COUNT(*) AS ORDER_COUNT " +
+                            "   FROM ORDERS " +
+                            "   GROUP BY MEMBER_ID " +
+                            "   ) I " +
+                            "ON M.MEMBER_ID = I.MEMBER_ID";
 
+            Query nativeQuery = em.createNativeQuery(sql, "memberWithOrderCount");
 
-            Query query = em.createNativeQuery(sql)
-                    .setParameter(1, "zzzz"); // 위치기반의 파라미터만 지원
+            List<Object[]> result = nativeQuery.getResultList();
 
-            List<Object[]> result = query.getResultList(); // 영속성 컨텍스트에서 관리하지 않음
+            for(Object[] row : result) {
+                Member member = (Member) row[0];
+                BigInteger orderCount = (BigInteger) row[1];
 
-            System.out.println(result.get(0)[0] + ", " + result.get(0)[1]);
+                System.out.println(member.getId() + ", " + member.getName());
+                System.out.println(orderCount);
+            }
 
             tx.commit();
         } catch (Exception e) {
