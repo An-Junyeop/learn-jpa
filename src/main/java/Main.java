@@ -32,7 +32,7 @@ public class Main {
             spq.setParameter("inParam", 100);
             spq.execute();
 
-            Integer out = (Integer) spq.getOutputParameterValue(2);
+//            Integer out = (Integer) spq.getOutputParameterValue(2);
             Integer out = (Integer) spq.getOutputParameterValue("outParam");
             System.out.println(out);
 
