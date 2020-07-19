@@ -1,4 +1,23 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <entity-mappings xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm" version="2.1">
 
+    <named-native-query name="Member.memberWithOrderCount" result-set-mapping="">
+        <query>
+            SELECT
+                M.*,
+                I.ORDER_COUNT
+            FROM MEMBER M  
+            LEFT JOIN  
+               (SELECT MEMBER_ID, COUNT(*) AS ORDER_COUNT  
+               FROM ORDERS  
+               GROUP BY MEMBER_ID  
+               ) I  
+            ON M.MEMBER_ID = I.MEMBER_ID
+        </query>
+    </named-native-query>
+
+    <sql-result-set-mapping name="memberWithOrderCountResultMap">
+        <entity-result entity-class="model.Member"/>
+        <column-result name="ORDER_COUNT"/>
+    </sql-result-set-mapping>
 </entity-mappings>
