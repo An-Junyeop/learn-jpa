@@ -22,13 +22,15 @@ public class Main {
         try {
             tx.begin();
 
-            List<Member> result = em
-                    .createNamedQuery("Member.memberSql", Member.class)
-                    .setParameter(1, "test11")
+            List<Object[]> result = em
+                    .createNamedQuery("Member.memberWithOrderCount")
                     .getResultList();
 
-            for (Member m : result) {
-                System.out.println(m.getName());
+            for (Object[] row : result) {
+                Member member = (Member) row[0];
+                BigInteger orderCount = (BigInteger) row[1];
+
+                System.out.println(member.getName() + ", " + orderCount);
             }
 
             tx.commit();

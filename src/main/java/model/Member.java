@@ -20,9 +20,24 @@ import java.util.List;
         columns = {@ColumnResult(name = "ORDER_COUNT")}
 )
 @NamedNativeQuery(
-        name = "Member.memberSql",
-        query = "SELECT * FROM MEMBER M WHERE NAME = ?",
-        resultClass = Member.class
+        name = "Member.memberWithOrderCount",
+        query =
+                "SELECT M.MEMBER_ID AS M_ID, " +
+                "M.NAME AS M_NAME, " +
+                "M.CREATE_DATE AS M_CREATE_DATE, " +
+                "M.LAST_MODIFIED_DATE AS M_LAST_DATE, " +
+                "M.CITY AS M_CITY, " +
+                "M.STREET AS M_STREET, " +
+                "M.ZIPCODE AS M_ZIPCODE, " +
+                "I.ORDER_COUNT " +
+                "FROM MEMBER M " +
+                "LEFT JOIN " +
+                "   (SELECT MEMBER_ID, COUNT(*) AS ORDER_COUNT " +
+                "   FROM ORDERS " +
+                "   GROUP BY MEMBER_ID " +
+                "   ) I " +
+                "ON M.MEMBER_ID = I.MEMBER_ID",
+        resultSetMapping = "memberWithOrderCount"
 )
 public class Member extends BaseEntity {
 
