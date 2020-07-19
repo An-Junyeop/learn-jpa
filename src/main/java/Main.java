@@ -1,11 +1,8 @@
-import com.mysema.query.Tuple;
-import com.mysema.query.jpa.JPASubQuery;
-import com.mysema.query.jpa.impl.JPADeleteClause;
+import com.mysema.query.BooleanBuilder;
 import com.mysema.query.jpa.impl.JPAQuery;
-import com.mysema.query.jpa.impl.JPAUpdateClause;
-import com.mysema.query.types.Projections;
-import com.sun.org.apache.xpath.internal.operations.Or;
-import model.*;
+import model.Item;
+import model.QItem;
+import org.h2.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -25,17 +22,23 @@ public class Main {
 
             JPAQuery query = new JPAQuery(em);
 
+            String name = "시골개발자";
+            Integer price = 10000;
+
             QItem item = QItem.item;
-            JPAUpdateClause updateClause = new JPAUpdateClause(em, item);
-            updateClause.where(item.name.eq("Book"))
-                    .set(item.price, item.price.add(100))
-                    .execute();
 
-            QOrder order = QOrder.order;
-            JPADeleteClause deleteClause = new JPADeleteClause(em, order);
-            deleteClause.where(order.status.eq(OrderStatus.ORDER))
-                    .execute();
+            BooleanBuilder builder = new BooleanBuilder();
 
+            if (!"".equals(name) && name != null) {
+                builder.and(item.name.contains(name));
+            }
+            if (price != null) {
+                builder.or(item.price.gt(price));
+            }
+
+            List<Item> result = query.from(item)
+                    .where(builder)
+                    .list(item);
 
             tx.commit();
         } catch (Exception e) {
