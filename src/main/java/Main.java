@@ -24,13 +24,16 @@ public class Main {
 
             StoredProcedureQuery spq =
                     em.createStoredProcedureQuery("proc_multiply");
-            spq.registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN);
-            spq.registerStoredProcedureParameter(2, Integer.class, ParameterMode.OUT);
-
-            spq.setParameter(1, 100);
+//            spq.registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("inParam", Integer.class, ParameterMode.IN);
+//            spq.registerStoredProcedureParameter(2, Integer.class, ParameterMode.OUT);
+            spq.registerStoredProcedureParameter("outParam", Integer.class, ParameterMode.IN);
+//            spq.setParameter(1, 100);
+            spq.setParameter("inParam", 100);
             spq.execute();
 
             Integer out = (Integer) spq.getOutputParameterValue(2);
+            Integer out = (Integer) spq.getOutputParameterValue("outParam");
             System.out.println(out);
 
             tx.commit();
