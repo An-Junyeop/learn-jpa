@@ -8,7 +8,17 @@ import java.util.List;
 
 @Entity
 @SqlResultSetMapping(name = "memberWithOrderCount",
-        entities = {@EntityResult(entityClass = Member.class)},
+        entities = {
+            @EntityResult(entityClass = model.Member.class, fields = {
+                    @FieldResult(name = "id", column = "m_id"),
+                    @FieldResult(name = "name", column = "m_name"),
+                    @FieldResult(name = "createDate", column = "m_create_date"),
+                    @FieldResult(name = "lastModifiedDate", column = "m_last_date"),
+                    @FieldResult(name = "address.city", column = "m_city"),
+                    @FieldResult(name = "address.street", column = "m_street"),
+                    @FieldResult(name = "address.zipcode", column = "m_zipcode")
+            })
+        },
         columns = {@ColumnResult(name = "ORDER_COUNT")}
 )
 public class Member extends BaseEntity {

@@ -13,6 +13,7 @@ import java.util.List;
 
 
 public class Main {
+
     public static void main(String[] args) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("learn-jpa");
         EntityManager em = emf.createEntityManager();
@@ -22,7 +23,14 @@ public class Main {
             tx.begin();
 
             String sql =
-                    "SELECT M.*, I.ORDER_COUNT " +
+                    "SELECT M.MEMBER_ID AS M_ID, " +
+                            "M.NAME AS M_NAME, " +
+                            "M.CREATE_DATE AS M_CREATE_DATE, " +
+                            "M.LAST_MODIFIED_DATE AS M_LAST_DATE, " +
+                            "M.CITY AS M_CITY, " +
+                            "M.STREET AS M_STREET, " +
+                            "M.ZIPCODE AS M_ZIPCODE, " +
+                            "I.ORDER_COUNT " +
                             "FROM MEMBER M " +
                             "LEFT JOIN " +
                             "   (SELECT MEMBER_ID, COUNT(*) AS ORDER_COUNT " +
