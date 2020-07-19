@@ -1,7 +1,5 @@
 package model;
 
-import org.hibernate.annotations.GeneratorType;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +18,11 @@ import java.util.List;
             })
         },
         columns = {@ColumnResult(name = "ORDER_COUNT")}
+)
+@NamedNativeQuery(
+        name = "Member.memberSql",
+        query = "SELECT * FROM MEMBER M WHERE NAME = ?",
+        resultClass = Member.class
 )
 public class Member extends BaseEntity {
 
