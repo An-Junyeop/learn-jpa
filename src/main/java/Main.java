@@ -20,16 +20,16 @@ public class Main {
         try {
             tx.begin();
 
-            String sql = "SELECT * " +
+            String sql = "SELECT MEMBER_ID, NAME " +
                     "FROM MEMBER WHERE NAME = ?";
 
 
-            Query query = em.createNativeQuery(sql, Member.class)
+            Query query = em.createNativeQuery(sql)
                     .setParameter(1, "zzzz"); // 위치기반의 파라미터만 지원
 
-            List<Member> result = query.getResultList(); // 결과가 영속성 컨텍스트에서 관리됨
+            List<Object[]> result = query.getResultList(); // 영속성 컨텍스트에서 관리하지 않음
 
-            System.out.println(result.get(0).getName());
+            System.out.println(result.get(0)[0] + ", " + result.get(0)[1]);
 
             tx.commit();
         } catch (Exception e) {
