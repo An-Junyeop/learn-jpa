@@ -16,8 +16,15 @@
         </query>
     </named-native-query>
 
+    <named-stored-procedure-query name="multiply" procedure-name="proc_multiply">
+        <parameter class="java.lang.Integer" mode="IN" name="inParam" />
+        <parameter class="java.lang.Integer" mode="OUT" name="outParam" />
+    </named-stored-procedure-query>
+
+
     <sql-result-set-mapping name="memberWithOrderCountResultMap">
         <entity-result entity-class="model.Member"/>
         <column-result name="ORDER_COUNT"/>
     </sql-result-set-mapping>
+
 </entity-mappings>

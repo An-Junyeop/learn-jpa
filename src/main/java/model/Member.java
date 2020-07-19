@@ -4,6 +4,16 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@NamedStoredProcedureQuery(
+        name = "multiply",
+        procedureName = "proc_multiply",
+        parameters = {
+                @StoredProcedureParameter(name = "inParam",
+                        mode = ParameterMode.IN, type = Integer.class),
+                @StoredProcedureParameter(name = "outParam",
+                        mode = ParameterMode.OUT, type = Integer.class)
+        }
+)
 @Entity
 public class Member extends BaseEntity {
 
