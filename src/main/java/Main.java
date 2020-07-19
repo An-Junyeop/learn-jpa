@@ -1,6 +1,8 @@
 import com.mysema.query.Tuple;
 import com.mysema.query.jpa.JPASubQuery;
+import com.mysema.query.jpa.impl.JPADeleteClause;
 import com.mysema.query.jpa.impl.JPAQuery;
+import com.mysema.query.jpa.impl.JPAUpdateClause;
 import com.mysema.query.types.Projections;
 import com.sun.org.apache.xpath.internal.operations.Or;
 import model.*;
@@ -23,28 +25,17 @@ public class Main {
 
             JPAQuery query = new JPAQuery(em);
 
-            QDelivery delivery = QDelivery.delivery;
+            QItem item = QItem.item;
+            JPAUpdateClause updateClause = new JPAUpdateClause(em, item);
+            updateClause.where(item.name.eq("Book"))
+                    .set(item.price, item.price.add(100))
+                    .execute();
 
-            // setter에 접근하여 값을 매핑
-            List<DeliveryDTO> result = query.distinct().from(delivery).list(
-                    Projections.bean(DeliveryDTO.class,
-                            delivery.id.as("id"),
-                            delivery.status.as("status"))
-            );
+            QOrder order = QOrder.order;
+            JPADeleteClause deleteClause = new JPADeleteClause(em, order);
+            deleteClause.where(order.status.eq(OrderStatus.ORDER))
+                    .execute();
 
-            // 필드 자체에 접근하여 값을 매핑
-            /*List<DeliveryDTO> result1 = query.from(delivery).list(
-                    Projections.fields(DeliveryDTO.class,
-                            delivery.id.as("id"),
-                            delivery.status.as("status"))
-            );*/
-
-            // 생성자에 접근하여 값을 매핑 (파라미터 순서가 같은 생성자 필요)
-            /*List<DeliveryDTO> result2 = query.from(delivery).list(
-                    Projections.constructor(DeliveryDTO.class,
-                            delivery.id.as("id"),
-                            delivery.status.as("status"))
-            );*/
 
             tx.commit();
         } catch (Exception e) {
